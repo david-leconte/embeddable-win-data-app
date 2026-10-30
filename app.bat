@@ -1,2 +1,3 @@
 @echo off
-lib\python\pythonw.exe "src/app.py"
+cd src
+..\lib\python\python.exe -m marimo edit

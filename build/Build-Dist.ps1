@@ -19,7 +19,7 @@ Get-ChildItem "$PythonFolder\python*._pth" | ForEach-Object {
 }
 
 & "$PythonFolder\python.exe" "$BuildTempFolder\get-pip.py"
-& "$PythonFolder\python.exe" "-m" "pip" "install" "setuptools" "--no-build-isolation"
 & "$PythonFolder\python.exe" "-m" "pip" "install" "-r" "$BuildFolder\requirements.txt" "--cache-dir" "$BuildTempFolder\pip_cache" "--no-build-isolation"
+
 
 Remove-Item $BuildTempFolder -Recurse -Force
