@@ -1,1 +1,2 @@
-marimo=0.25.*
+marimo==0.25.*
+pandas==3.1.*
