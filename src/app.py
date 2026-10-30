@@ -1,35 +1,40 @@
-"Example of a simple command-line application using cmd and pandas."
+"Example of a simple web app using pywebio and pandas."
 
-import cmd
 from pathlib import Path
-import pandas
+
+from pywebio import output
+import pandas as pd
 
 
-class AppShell(cmd.Cmd):
-    "Simple command-line application shell."
-    intro = "Welcome to the App shell. Type help or ? to list commands.\n"
-    prompt = "(app) "
-    df = pandas.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+class WebApp:
+    def __init__(self, root_path):
+        self.root_path = root_path
+        self.df = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
 
-    def do_exit(self, _):
-        "Exit the shell."
-        print("Exiting...")
-        return True
+    def show_data(self):
+        with output.use_scope("output", clear=True):
+            output.put_table([self.df.columns.tolist(), *self.df.values.tolist()])
 
-    def do_show_data(self, _):
-        "Show the data in the DataFrame."
-        print(self.df)
-
-    def do_export_data(self, _):
-        "Export the data in the DataFrame."
-        export_path = Path(__file__).parent.parent / "data" / "data.csv"
+    def export_data(self):
+        export_path = self.root_path / "data" / "data.csv"
         export_path.parent.mkdir(parents=True, exist_ok=True)
         self.df.to_csv(export_path, index=False)
+        with output.use_scope("output", clear=True):
+            output.put_text(f"Exported to {export_path}")
 
-    def do_help(self, arg):
-        "List available commands."
-        cmd.Cmd.do_help(self, arg)
+    def help(self):
+        with output.use_scope("output", clear=True):
+            output.put_text("Show data: display the DataFrame.")
+            output.put_text("Export data: save the DataFrame to CSV.")
+
+    def run(self):
+        output.put_markdown("# Embeddable Windows Data App")
+        output.put_buttons(
+            ["Show data", "Export data", "Help"],
+            onclick=[self.show_data, self.export_data, self.help],
+        )
 
 
 if __name__ == "__main__":
-    AppShell().cmdloop()
+    app = WebApp(Path(__file__).parent.parent.resolve())
+    app.run()

@@ -1,2 +1,2 @@
 @echo off
-lib\python\python.exe "src/app.py"
+lib\python\pythonw.exe "src/app.py"
